@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Estás preparado?</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 { font-weight: 300; letter-spacing: 2px; margin-bottom: 10px; }
+        p { color: #888; margin-bottom: 30px; }
+
+        #countdown {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff4757;
+            text-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #button-container { margin-top: 30px; display: none; }
+        
+        .btn {
+            background: #ff4757;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
+        }
+        
+        .btn:hover { transform: scale(1.05); background: #ff6b81; }
+    </style>
+</head>
+<body>
+
+    <h1>Algo especial está por suceder...</h1>
+    <p>La espera valdrá la pena, buebue.</p>
+
+    <div id="countdown">Cargando...</div>
+
+    <div id="button-container" id="reveal">
+        <a href="TU_LINK_DEL_JUEGO_AQUI" class="btn">🎁 ¡ABRIR MI REGALO AHORA!</a>
+    </div>
+
+    <script>
+        // CONFIGURA AQUÍ LA FECHA (Año, Mes -1, Día, Hora, Minutos)
+        // Nota: Enero es 0, Febrero es 1, etc.
+        const targetDate = new Date(2026, 1, 6, 18, 30, 0).getTime();
+
+        const timer = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = 
+                (hours < 10 ? "0" : "") + hours + ":" + 
+                (minutes < 10 ? "0" : "") + minutes + ":" + 
+                (seconds < 10 ? "0" : "") + seconds;
+
+            if (distance < 0) {
+                clearInterval(timer);
+                document.getElementById("countdown").style.display = "none";
+                document.querySelector("h1").innerHTML = "¡EL MOMENTO HA LLEGADO!";
+                document.getElementById("button-container").style.display = "block";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>✨ Una sorpresa especial...</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --gold: #ffd700;
+        --rose-gold: #e0bfb8;
+        --bg-deep: #1a0b2e;
+        --bg-light: #462468;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: 'Montserrat', sans-serif;
+        /* Usamos dvh para evitar problemas con la barra de safari en iPhone */
+        height: 100dvh; 
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-deep) 100%);
+        color: white;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    /* Partículas de fondo */
+    .particles {
+        position: fixed; /* Fixed para que no se mueva en móvil */
+        top: 0; left: 0; width: 100%; height: 100%;
+        overflow: hidden;
+        z-index: -1;
+    }
+    .particle {
+        position: absolute;
+        display: block;
+        pointer-events: none;
+        width: 3px; height: 3px;
+        background: var(--gold);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--gold);
+        animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(110vh) scale(0); opacity: 0; }
+        20% { opacity: 1; }
+        100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+
+    /* Títulos */
+    h1.script-title {
+        font-family: 'Great Vibes', cursive;
+        font-size: 3.5rem; /* Tamaño base más controlado */
+        color: var(--gold);
+        margin: 0 0 10px 0;
+        line-height: 1.1;
+        text-shadow: 2px 2px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 40px;
+        color: var(--rose-gold);
+        padding: 0 10px;
+    }
+
+    /* Contenedor del contador */
+    .countdown-container {
+        display: flex;
+        flex-direction: row; /* Forzamos fila */
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .time-circle {
+        width: 100px; height: 100px;
+        background: rgba(26, 11, 46, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px); /* Soporte iOS */
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .number {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: white;
+        line-height: 1;
+        text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        color: var(--rose-gold);
+        letter-spacing: 1px;
+        margin-top: 5px;
+    }
+
+    /* Vista Final */
+    #celebration-view {
+        display: none; 
+        opacity: 0;
+        transition: opacity 1s ease-in;
+        z-index: 10;
+        width: 100%;
+        padding: 20px;
+    }
+    
+    #celebration-view h1.script-title { font-size: 4rem; margin-bottom: 20px;}
+    .final-message { font-size: 1.1rem; font-weight: 300; line-height: 1.6; }
+
+    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+
+    /* --- AJUSTES ESPECÍFICOS PARA MÓVIL (IPHONE 13) --- */
+    @media (max-width: 450px) {
+        h1.script-title { font-size: 2.8rem; } /* Título más pequeño para que no se parta mal */
+        .subtitle { font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 30px; }
+        
+        /* Ajuste crítico para que quepan los 3 círculos */
+        .countdown-container { gap: 10px; } 
+        .time-circle { width: 85px; height: 85px; } 
+        .number { font-size: 1.8rem; }
+        .label { font-size: 0.55rem; }
+        
+        /* Vista final móvil */
+        #celebration-view h1.script-title { font-size: 3.5rem; }
+    }
+</style>
+</head>
+<body>
+    
+    <div class="particles"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <div id="countdown-view">
+        <h1 class="script-title">¡Feliz Cumpleaños!</h1>
+        <p class="subtitle">La sorpresa llega en...</p>
+        
+        <div class="countdown-container">
+            <div class="time-circle">
+                <span class="number" id="hours">00</span>
+                <span class="label">Horas</span>
+            </div>
+            <div class="time-circle">
+                <span class="number" id="minutes">00</span>
+                <span class="label">Min</span>
+            </div>
+            <div class="time-circle">
+                <span class="number" id="seconds">00</span>
+                <span class="label">Seg</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="celebration-view">
+        <h1 class="script-title">¡Es tu momento!</h1>
+        <p class="final-message">
+            El tiempo de espera ha terminado. <br>
+            ✨<br>
+            Revisa tu correo ahora.
+        </p>
+    </div>
+
+    <script>
+        // 1. Partículas
+        const particlesContainer = document.querySelector('.particles');
+        for(let i=0; i<40; i++){
+            let particle = document.createElement('span');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 15 + 5) + 's';
+            particle.style.animationDelay = (Math.random() * 5) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // --- CONFIGURACIÓN DE HORA ---
+        // META: HOY A LAS 18:30
+        const targetDate = new Date();
+        targetDate.setHours(18, 30, 0, 0); 
+        
+        let animationTriggered = false;
+
+        function updateCountdown() {
+            const now = new Date();
+            const distance = targetDate - now;
+
+            if (distance <= 0 && !animationTriggered) {
+                animationTriggered = true;
+                clearInterval(timerInterval);
+                const countdownView = document.getElementById("countdown-view");
+                countdownView.style.opacity = '0';
+                countdownView.style.transition = 'opacity 1s ease-out';
+                
+                setTimeout(() => {
+                    countdownView.style.display = "none";
+                    const celebrationView = document.getElementById("celebration-view");
+                    celebrationView.style.display = "block";
+                    setTimeout(() => { celebrationView.style.opacity = "1"; }, 50);
+                    launchPremiumConfetti();
+                }, 1000);
+                return;
+            }
+
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
+            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
+            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+        }
+
+        const timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // 3. Confeti
+        function launchPremiumConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            let particles = []; const colors = ['#ffd700', '#e0bfb8', '#ffffff'];
+            
+            function Particle(x, y) {
+                this.x = x; this.y = y; this.size = Math.random() * 7 + 3; 
+                this.speedX = Math.random() * 4 - 2; this.speedY = Math.random() * -3 - 3; 
+                this.color = colors[Math.floor(Math.random() * colors.length)]; 
+                this.rotation = Math.random() * 360; this.rotationSpeed = Math.random() * 10 - 5; 
+                this.gravity = 0.05; this.opacity = 1;
+            }
+            Particle.prototype.update = function() {
+                this.speedY += this.gravity; this.x += this.speedX; this.y += this.speedY; 
+                this.rotation += this.rotationSpeed; this.opacity -= 0.006;
+            };
+            Particle.prototype.draw = function() {
+                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation * Math.PI / 180); 
+                ctx.globalAlpha = this.opacity; ctx.fillStyle = this.color; 
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size); ctx.restore();
+            };
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (particles.length < 200 && Math.random() < 0.1) { particles.push(new Particle(canvas.width / 2, canvas.height / 2 + 50)); }
+                particles.forEach((p, index) => { p.update(); p.draw(); if (p.opacity <= 0) particles.splice(index, 1); });
+                if(particles.length > 0) requestAnimationFrame(animateConfetti);
+            }
+            for(let i=0; i<100; i++) particles.push(new Particle(canvas.width / 2, canvas.height / 1.5));
+            animateConfetti();
+        }
+    </script>
+</body>
+</html>

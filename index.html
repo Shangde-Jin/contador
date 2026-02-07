@@ -1,270 +1,408 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>✨ Una sorpresa especial...</title>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
-<style>
-    :root {
-        --gold: #ffd700;
-        --rose-gold: #e0bfb8;
-        --bg-deep: #1a0b2e;
-        --bg-light: #462468;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Golden Bill</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;600&display=swap');
 
-    * { box-sizing: border-box; }
+        :root {
+            --gold: #d4af37;
+            --gold-grad: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #c5a028 100%);
+            --dark: #0a0a0a;
+            --red: #c0392b;
+            --green: #27ae60;
+        }
 
-    body {
-        margin: 0;
-        padding: 20px;
-        font-family: 'Montserrat', sans-serif;
-        /* Usamos dvh para evitar problemas con la barra de safari en iPhone */
-        height: 100dvh; 
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: radial-gradient(circle at center, var(--bg-light) 0%, var(--bg-deep) 100%);
-        color: white;
-        overflow: hidden;
-        text-align: center;
-    }
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--dark);
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            touch-action: none; /* Bloquea scroll */
+        }
 
-    /* Partículas de fondo */
-    .particles {
-        position: fixed; /* Fixed para que no se mueva en móvil */
-        top: 0; left: 0; width: 100%; height: 100%;
-        overflow: hidden;
-        z-index: -1;
-    }
-    .particle {
-        position: absolute;
-        display: block;
-        pointer-events: none;
-        width: 3px; height: 3px;
-        background: var(--gold);
-        border-radius: 50%;
-        box-shadow: 0 0 10px var(--gold);
-        animation: floatUp linear infinite;
-    }
-    @keyframes floatUp {
-        0% { transform: translateY(110vh) scale(0); opacity: 0; }
-        20% { opacity: 1; }
-        100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-    }
+        /* --- PANTALLA DE CONFIGURACIÓN (SETUP) --- */
+        #setup-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            z-index: 50;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s;
+        }
 
-    /* Títulos */
-    h1.script-title {
-        font-family: 'Great Vibes', cursive;
-        font-size: 3.5rem; /* Tamaño base más controlado */
-        color: var(--gold);
-        margin: 0 0 10px 0;
-        line-height: 1.1;
-        text-shadow: 2px 2px 15px rgba(255, 215, 0, 0.3);
-    }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            background: var(--gold-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 10px 0;
+            text-align: center;
+            letter-spacing: 2px;
+        }
 
-    .subtitle {
-        font-size: 0.9rem;
-        font-weight: 300;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 40px;
-        color: var(--rose-gold);
-        padding: 0 10px;
-    }
+        p.subtitle {
+            color: #888; margin-bottom: 30px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px;
+        }
 
-    /* Contenedor del contador */
-    .countdown-container {
-        display: flex;
-        flex-direction: row; /* Forzamos fila */
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-        width: 100%;
-        max-width: 600px;
-    }
+        .control-group { margin-bottom: 25px; text-align: center; width: 85%; }
+        label { display: block; color: var(--gold); margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; }
 
-    .time-circle {
-        width: 100px; height: 100px;
-        background: rgba(26, 11, 46, 0.4);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px); /* Soporte iOS */
-        border-radius: 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-    }
+        /* Inputs estilizados */
+        input[type="text"] {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            border-bottom: 2px solid var(--gold);
+            color: white; font-size: 1.5rem; text-align: center;
+            padding: 10px; width: 100%; border-radius: 5px;
+            font-family: 'Playfair Display', serif; text-transform: uppercase;
+            outline: none; transition: 0.3s;
+        }
+        input:focus { background: rgba(212, 175, 55, 0.1); }
 
-    .number {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: white;
-        line-height: 1;
-        text-shadow: 0 0 10px rgba(255,255,255,0.3);
-    }
+        /* Selector de Números */
+        .num-selector {
+            display: flex; gap: 10px; justify-content: center; margin-top: 10px;
+        }
+        .btn-num {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            border: 2px solid #333;
+            background: transparent;
+            color: #666; font-size: 1.2rem; font-weight: bold;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-num.active {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            transform: scale(1.1);
+        }
 
-    .label {
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        color: var(--rose-gold);
-        letter-spacing: 1px;
-        margin-top: 5px;
-    }
+        button.start-btn {
+            background: var(--gold-grad);
+            border: none; padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem; font-weight: bold; letter-spacing: 2px;
+            color: #000; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+        button.start-btn:active { transform: scale(0.95); }
 
-    /* Vista Final */
-    #celebration-view {
-        display: none; 
-        opacity: 0;
-        transition: opacity 1s ease-in;
-        z-index: 10;
-        width: 100%;
-        padding: 20px;
-    }
-    
-    #celebration-view h1.script-title { font-size: 4rem; margin-bottom: 20px;}
-    .final-message { font-size: 1.1rem; font-weight: 300; line-height: 1.6; }
+        /* --- PANTALLA DE JUEGO --- */
+        #game-area {
+            position: relative;
+            width: 340px; height: 500px;
+            opacity: 0; transform: scale(0.9);
+            transition: all 0.5s ease-out;
+            pointer-events: none; /* Desactivado hasta que cargue */
+        }
+        #game-area.visible { opacity: 1; transform: scale(1); pointer-events: all; }
 
-    #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+        .card-frame {
+            position: relative; width: 100%; height: 100%;
+            border-radius: 20px;
+            padding: 5px;
+            background: var(--gold-grad); /* Borde dorado */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
 
-    /* --- AJUSTES ESPECÍFICOS PARA MÓVIL (IPHONE 13) --- */
-    @media (max-width: 450px) {
-        h1.script-title { font-size: 2.8rem; } /* Título más pequeño para que no se parta mal */
-        .subtitle { font-size: 0.75rem; letter-spacing: 2px; margin-bottom: 30px; }
+        .card-inner {
+            position: relative; width: 100%; height: 100%;
+            background: #111; border-radius: 16px;
+            overflow: hidden;
+        }
+
+        /* CAPA DE RESULTADO (FONDO) */
+        #result-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 30px; box-sizing: border-box;
+            z-index: 1;
+        }
         
-        /* Ajuste crítico para que quepan los 3 círculos */
-        .countdown-container { gap: 10px; } 
-        .time-circle { width: 85px; height: 85px; } 
-        .number { font-size: 1.8rem; }
-        .label { font-size: 0.55rem; }
-        
-        /* Vista final móvil */
-        #celebration-view h1.script-title { font-size: 3.5rem; }
-    }
-</style>
+        /* Estilos Ganador / Perdedor */
+        .res-loser { background: radial-gradient(circle, #330000 0%, #000 100%); }
+        .res-winner { background: radial-gradient(circle, #002200 0%, #000 100%); }
+
+        .res-icon { font-size: 5rem; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+        .res-title {
+            font-family: 'Playfair Display', serif; font-size: 2.2rem; line-height: 1; margin-bottom: 10px;
+            background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .res-desc { color: #aaa; font-size: 0.9rem; line-height: 1.5; }
+        .res-troll { color: var(--gold); font-weight: bold; margin-top: 20px; font-size: 1.2rem; border-top: 1px solid #333; padding-top: 15px; width: 100%; }
+
+        /* CANVAS (RASCA) */
+        canvas {
+            position: absolute; top: 0; left: 0; z-index: 10;
+            border-radius: 16px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        /* EFECTOS EXTRA */
+        .pulse-red { animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { box-shadow: inset 0 0 0px #500; } 50% { box-shadow: inset 0 0 50px #f00; } 100% { box-shadow: inset 0 0 0px #500; } }
+
+        /* CONFETI SIMPLE */
+        .confetti { position: absolute; width: 10px; height: 10px; background: gold; animation: fall linear forwards; z-index: 20; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+    </style>
 </head>
 <body>
-    
-    <div class="particles"></div>
-    <canvas id="confetti-canvas"></canvas>
 
-    <div id="countdown-view">
-        <h1 class="script-title">¡Feliz Cumpleaños!</h1>
-        <p class="subtitle">La sorpresa llega en...</p>
+    <div id="setup-screen">
+        <h1>RASCA</h1>
+        <p class="subtitle">¿A quién le dolerá el bolsillo?</p>
+
+        <div class="control-group">
+            <label>PALABRA CLAVE</label>
+            <input type="text" id="seed-word" placeholder="Ej: VIERNES" autocomplete="off">
+        </div>
+
+        <div class="control-group">
+            <label>TU NÚMERO DE JUGADOR</label>
+            <div class="num-selector" id="num-container">
+                </div>
+        </div>
         
-        <div class="countdown-container">
-            <div class="time-circle">
-                <span class="number" id="hours">00</span>
-                <span class="label">Horas</span>
-            </div>
-            <div class="time-circle">
-                <span class="number" id="minutes">00</span>
-                <span class="label">Min</span>
-            </div>
-            <div class="time-circle">
-                <span class="number" id="seconds">00</span>
-                <span class="label">Seg</span>
+        <p style="font-size: 0.7rem; color: #555; margin-top: 10px;">Aseguraos de poner todos la misma palabra.</p>
+
+        <button class="start-btn" onclick="startGame()">ADIÓS AHORROS</button>
+    </div>
+
+    <div id="game-area">
+        <div class="card-frame">
+            <div class="card-inner">
+                
+                <div id="result-layer">
+                    <div class="res-icon" id="r-icon"></div>
+                    <div class="res-title" id="r-title"></div>
+                    <div class="res-desc" id="r-desc"></div>
+                    <div class="res-troll" id="r-troll"></div>
+                </div>
+
+                <canvas id="scratch-canvas"></canvas>
+            
             </div>
         </div>
+        <p style="text-align: center; color: #666; margin-top: 25px; font-size: 0.8rem; letter-spacing: 1px;">DESLIZA PARA DESCUBRIR</p>
     </div>
 
-    <div id="celebration-view">
-        <h1 class="script-title">¡Es tu momento!</h1>
-        <p class="final-message">
-            El tiempo de espera ha terminado. <br>
-            ✨<br>
-            Revisa tu correo ahora.
-        </p>
-    </div>
+<script>
+    const TOTAL_PLAYERS = 6; // Fijo para 6 personas como pediste
+    let myNumber = null;
+    let canvas, ctx, w, h;
+    let isDrawing = false;
+    let revealed = false;
 
-    <script>
-        // 1. Partículas
-        const particlesContainer = document.querySelector('.particles');
-        for(let i=0; i<40; i++){
-            let particle = document.createElement('span');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = (Math.random() * 15 + 5) + 's';
-            particle.style.animationDelay = (Math.random() * 5) + 's';
-            particlesContainer.appendChild(particle);
+    // --- SETUP INICIAL ---
+    window.onload = () => {
+        const container = document.getElementById('num-container');
+        for(let i=1; i<=TOTAL_PLAYERS; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'btn-num';
+            btn.innerText = i;
+            btn.onclick = () => selectNum(i, btn);
+            container.appendChild(btn);
         }
+    };
 
-        // --- CONFIGURACIÓN DE HORA ---
-        // META: HOY A LAS 18:30
-        const targetDate = new Date();
-        targetDate.setHours(18, 30, 0, 0); 
+    function selectNum(num, btnElement) {
+        myNumber = num;
+        // Reset visual
+        document.querySelectorAll('.btn-num').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+    }
+
+    // --- ALGORITMO DETERMINISTA ---
+    function hashString(str) {
+        let hash = 5381;
+        str = str.toUpperCase().trim();
+        if(str.length === 0) return 0; // Evitar vacíos
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) + hash) + str.charCodeAt(i);
+        }
+        return Math.abs(hash);
+    }
+
+    function startGame() {
+        const seed = document.getElementById('seed-word').value;
         
-        let animationTriggered = false;
+        if(!myNumber) { alert("¡Elige tu número de jugador!"); return; }
+        if(!seed) { alert("¡Escribid la Palabra Clave!"); return; }
 
-        function updateCountdown() {
-            const now = new Date();
-            const distance = targetDate - now;
+        // Calcular quién pierde
+        const hash = hashString(seed);
+        const loserIndex = (hash % TOTAL_PLAYERS) + 1;
 
-            if (distance <= 0 && !animationTriggered) {
-                animationTriggered = true;
-                clearInterval(timerInterval);
-                const countdownView = document.getElementById("countdown-view");
-                countdownView.style.opacity = '0';
-                countdownView.style.transition = 'opacity 1s ease-out';
-                
-                setTimeout(() => {
-                    countdownView.style.display = "none";
-                    const celebrationView = document.getElementById("celebration-view");
-                    celebrationView.style.display = "block";
-                    setTimeout(() => { celebrationView.style.opacity = "1"; }, 50);
-                    launchPremiumConfetti();
-                }, 1000);
-                return;
-            }
+        // Transición
+        document.getElementById('setup-screen').style.opacity = 0;
+        setTimeout(() => {
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('game-area').classList.add('visible');
+            initCanvas(loserIndex);
+        }, 500);
+    }
 
-            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((distance % (1000 * 60)) / 1000);
+    function initCanvas(loserIndex) {
+        const frame = document.querySelector('.card-inner');
+        canvas = document.getElementById('scratch-canvas');
+        ctx = canvas.getContext('2d');
+        const rLayer = document.getElementById('result-layer');
 
-            document.getElementById("hours").innerText = h < 10 ? "0" + h : h;
-            document.getElementById("minutes").innerText = m < 10 ? "0" + m : m;
-            document.getElementById("seconds").innerText = s < 10 ? "0" + s : s;
+        w = frame.offsetWidth;
+        h = frame.offsetHeight;
+        canvas.width = w;
+        canvas.height = h;
+
+        // Configurar Resultado (Lo que hay debajo)
+        if (myNumber === loserIndex) {
+            // PERDEDOR
+            rLayer.className = "res-loser";
+            document.getElementById('r-icon').innerText = "💸";
+            document.getElementById('r-title').innerText = "感谢你特别邀请";
+            document.getElementById('r-troll').innerText = "PAGAS TÚ";
+            // Vibración del miedo
+            if(navigator.vibrate) navigator.vibrate([100,50,100,50,500]);
+        } else {
+            // GANADOR
+            rLayer.className = "res-winner";
+            document.getElementById('r-icon').innerText = "🥂";
+            document.getElementById('r-title').innerText = "不用买单好心情";
+            document.getElementById('r-troll').innerText = `SEÑALA AL Nº ${loserIndex}`;
         }
 
-        const timerInterval = setInterval(updateCountdown, 1000);
-        updateCountdown();
+        // DIBUJAR LA PORTADA (Capa Dorada)
+        ctx.globalCompositeOperation = 'source-over';
+        
+        // Fondo degradado dorado
+        const grd = ctx.createLinearGradient(0, 0, w, h);
+        grd.addColorStop(0, "#C5A028");
+        grd.addColorStop(0.3, "#F3E5AB");
+        grd.addColorStop(0.6, "#D4AF37");
+        grd.addColorStop(1, "#8A6E2F");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, w, h);
 
-        // 3. Confeti
-        function launchPremiumConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            let particles = []; const colors = ['#ffd700', '#e0bfb8', '#ffffff'];
-            
-            function Particle(x, y) {
-                this.x = x; this.y = y; this.size = Math.random() * 7 + 3; 
-                this.speedX = Math.random() * 4 - 2; this.speedY = Math.random() * -3 - 3; 
-                this.color = colors[Math.floor(Math.random() * colors.length)]; 
-                this.rotation = Math.random() * 360; this.rotationSpeed = Math.random() * 10 - 5; 
-                this.gravity = 0.05; this.opacity = 1;
-            }
-            Particle.prototype.update = function() {
-                this.speedY += this.gravity; this.x += this.speedX; this.y += this.speedY; 
-                this.rotation += this.rotationSpeed; this.opacity -= 0.006;
-            };
-            Particle.prototype.draw = function() {
-                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation * Math.PI / 180); 
-                ctx.globalAlpha = this.opacity; ctx.fillStyle = this.color; 
-                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size); ctx.restore();
-            };
-            function animateConfetti() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if (particles.length < 200 && Math.random() < 0.1) { particles.push(new Particle(canvas.width / 2, canvas.height / 2 + 50)); }
-                particles.forEach((p, index) => { p.update(); p.draw(); if (p.opacity <= 0) particles.splice(index, 1); });
-                if(particles.length > 0) requestAnimationFrame(animateConfetti);
-            }
-            for(let i=0; i<100; i++) particles.push(new Particle(canvas.width / 2, canvas.height / 1.5));
-            animateConfetti();
+        // Patrón elegante
+        ctx.strokeStyle = "rgba(0,0,0,0.1)";
+        ctx.lineWidth = 2;
+        for(let i=0; i<w; i+=20) {
+            ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,h); ctx.stroke();
         }
-    </script>
+
+        // Texto Portada
+        ctx.font = "900 35px 'Playfair Display'";
+        ctx.fillStyle = "#111";
+        ctx.textAlign = "center";
+        ctx.fillText("GOLDEN BILL", w/2, h/2 - 20);
+        
+        ctx.font = "600 14px 'Poppins'";
+        ctx.fillStyle = "#444";
+        ctx.fillText("RASCA AQUÍ", w/2, h/2 + 20);
+
+        // Configurar Pincel
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 45;
+
+        // Eventos
+        addEvents();
+    }
+
+    function addEvents() {
+        ['mousedown', 'touchstart'].forEach(evt => 
+            canvas.addEventListener(evt, startScratch, {passive: false}));
+        ['mousemove', 'touchmove'].forEach(evt => 
+            canvas.addEventListener(evt, scratch, {passive: false}));
+        ['mouseup', 'touchend'].forEach(evt => 
+            canvas.addEventListener(evt, endScratch));
+    }
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: cx - rect.left, y: cy - rect.top };
+    }
+
+    function startScratch(e) {
+        if(revealed) return;
+        isDrawing = true;
+        scratch(e);
+    }
+
+    function scratch(e) {
+        if(!isDrawing || revealed) return;
+        if(e.cancelable) e.preventDefault(); // Stop scroll
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 25, 0, Math.PI*2);
+        ctx.fill();
+        // Feedback
+        if(navigator.vibrate && Math.random()>0.8) navigator.vibrate(5);
+    }
+
+    function endScratch() {
+        isDrawing = false;
+        checkWin();
+    }
+
+    function checkWin() {
+        if(revealed) return;
+        const imgData = ctx.getImageData(0,0,w,h).data;
+        let clear = 0;
+        // Muestreo rápido (cada 50px)
+        for(let i=3; i<imgData.length; i+=200) {
+            if(imgData[i] === 0) clear++;
+        }
+        
+        if(clear > (imgData.length/200) * 0.35) { // 35% rascado
+            revealAll();
+        }
+    }
+
+    function revealAll() {
+        revealed = true;
+        canvas.style.transition = "opacity 0.6s ease-out";
+        canvas.style.opacity = 0;
+        setTimeout(() => canvas.style.display = 'none', 600);
+        
+        // Efectos finales
+        const rLayer = document.getElementById('result-layer');
+        if(rLayer.className.includes('loser')) {
+            rLayer.classList.add('pulse-red');
+        } else {
+            launchConfetti();
+        }
+    }
+
+    function launchConfetti() {
+        for(let i=0; i<30; i++) {
+            const conf = document.createElement('div');
+            conf.className = 'confetti';
+            conf.style.left = Math.random() * 100 + '%';
+            conf.style.backgroundColor = ['#gold', '#fff', '#27ae60'][Math.floor(Math.random()*3)];
+            conf.style.animationDuration = (Math.random() * 2 + 1) + 's';
+            document.body.appendChild(conf);
+        }
+    }
+
+</script>
 </body>
 </html>
